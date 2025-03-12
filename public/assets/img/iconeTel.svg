@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Camada_2" data-name="Camada 2" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 491.37 491.37">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #1c2e5b;
+      }
+
+      .cls-1, .cls-2 {
+        stroke-width: 0px;
+      }
+
+      .cls-2 {
+        fill: url(#Gradiente_sem_nome_22);
+      }
+    </style>
+    <radialGradient id="Gradiente_sem_nome_22" data-name="Gradiente sem nome 22" cx="188.95" cy="175.09" fx="188.95" fy="175.09" r="264.15" gradientUnits="userSpaceOnUse">
+      <stop offset=".15" stop-color="#f6f6f6"/>
+      <stop offset="1" stop-color="#dadada"/>
+    </radialGradient>
+  </defs>
+  <g id="objects">
+    <g>
+      <circle class="cls-2" cx="245.69" cy="245.69" r="245.69"/>
+      <path class="cls-1" d="M172.36,117.17c-2.33-3.87-6.24-6.41-10.73-6.96-.6-.07-1.21-.11-1.81-.11-3.84,0-7.51,1.51-10.28,4.27l-33.75,33.75c-3.85,3.81-5.91,9.07-5.68,14.45,1.08,24.14,10.16,86.88,70.97,147.74,60.82,60.82,123.58,69.89,147.74,70.97,5.41.18,10.6-1.85,14.44-5.68l33.75-33.75c3.19-3.19,4.71-7.6,4.16-12.09-.55-4.5-3.09-8.41-6.97-10.74l-51.72-31.01c-5.74-3.43-13.05-2.54-17.78,2.18l-15.75,15.71c-4.5,4.49-11.29,5.6-16.91,2.76-9.25-4.63-25.41-15.26-49.72-39.58-24.33-24.33-34.96-40.48-39.59-49.75-2.85-5.62-1.75-12.42,2.73-16.9l15.75-15.75c4.72-4.72,5.62-12.04,2.18-17.78l-31.01-51.73Z"/>
+    </g>
+  </g>
+</svg>
