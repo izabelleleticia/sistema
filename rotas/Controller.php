@@ -8,7 +8,9 @@ class Controller{
 
         require_once '../app/views/'.$views.'.php';
         // require_once '../app/views/home.php'.$views. $dados;
-                        //../app/views/home.php
+      
+
+                      
 
     }
 

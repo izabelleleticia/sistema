@@ -1,3 +1,4 @@
+<a href="http://localhost/sistema/public/servicos/adicionar"class="btn btn-primary">Cadastrar Serviço</a>
 <table class="table table-striped">
     <thead>
         <tr>
