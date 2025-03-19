@@ -29,4 +29,26 @@ class Servico extends Model
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
+    //Método para Adicionar um Serviço
+
+    public function addServico($dados)
+    {
+        $sql = "INSERT INTO tbl_servico (nome_servico, descricao_servico, valor_servico, tempo_exec_servico, foto_servico, alt_tipo, tipo_servico, id_especialidade, status_servico) 
+                VALUES (:nome_servico, :descricao_servico, :valor_servico, :tempo_exec_servico,  :foto_servico, :alt_tipo, :tipo_servico, :id_especialidade, :status_servico)";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindValue(':nome_servico', $dados['nome_servico'], PDO::PARAM_STR);
+        $stmt->bindValue(':descricao_servico', $dados['descricao_servico'], PDO::PARAM_STR);
+        $stmt->bindValue(':valor_servico', $dados['valor_servico'], PDO::PARAM_STR);
+        $stmt->bindValue(':tempo_exec_servico', $dados['tempo_exec_servico'], PDO::PARAM_INT);
+        $stmt->bindValue(':foto_servico', $dados['foto_servico'], PDO::PARAM_STR);
+        $stmt->bindValue(':alt_tipo', $dados['alt_tipo'], PDO::PARAM_STR);
+        $stmt->bindValue(':tipo_servico', $dados['tipo_servico'], PDO::PARAM_STR);
+        $stmt->bindValue(':id_especialidade', $dados['id_especialidade'], PDO::PARAM_INT);
+        $stmt->bindValue(':status_servico', $dados['status_servico'], PDO::PARAM_INT);
+      
+
+        return $stmt->execute();
+
+    }
 }

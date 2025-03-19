@@ -1,14 +1,16 @@
 <h1>Cadastro de serviços</h1>
-<div class="col-md-3 ">
+<form class="row g-3" method="POST" action="http://localhost/sistema/public/servicos/adicionar"
+    enctype="multipart/form-data">
+
+<div class="col-md-2 ">
         <img id="preview" class="rounded-2" src="https://localhost/sistema/public/uploads/servico/revisao_completa.jpg" alt="" style="width:100%; cursor: pointer;"
             title="Clique na imagem para selecionar uma foto">
             <input type="file" name="foto_servico" id="foto_servico" style="display:none;" accept="image/">
 
     </div>
-<form class="row g-3" method="POST" action="http://localhost/sistema/public/servicos/adicionar"
-    enctype="multipart/form-data">
+
     <div class="col-md-6">
-        <label for="inputEmail4" class="form-label">Nome</label>
+        <label for="inputName" class="form-label">Nome</label>
         <input type="text" class="form-control" id="nome_servico" name="nome_servico" required>
     </div>
    
@@ -41,17 +43,13 @@
         <label for="inputState" class="form-label">Especialidade</label>
         <select id="inputState" class="form-select" id="id_especialidade" name="id_especialidade" required>
             <option selected>Insira a Especialidade</option>
-            <option value="1">Mecânica</option>
-            <option value="2">Manutenção</option>
-            <option value="3">DESATIVADO</option>
+            <?php foreach ($especialidade as $linha): ?>
+            <option value="value="<?php echo $linha['id_especialidade'] ?>><?php echo $linha['nome_especialidade'] ?></option>
+         <?php endforeach; ?>
 
         </select>
     </div>
-    <div class="col-md-4">
-        <label for="formFileMultiple" class="form-label">Insira uma foto para o serviço</label>
-        <input class="form-control" type="file" id="formFileMultiple" multiple>
-
-    </div>
+   
 
     <div class="col-12">
         <button type="submit" class="btn btn-primary">Cadastrar</button>
@@ -62,12 +60,14 @@
 </form>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
+
         const visualizarImg = document.getElementById('preview');
         const arquivo = document.getElementById('foto_servico');
 
         visualizarImg.addEventListener('click', function () {
             arquivo.click();
         })
+
         arquivo.addEventListener('change', function (){
             if (arquivo.files && arquivo.files[0]){
                 let render = new FileReader();

@@ -720,7 +720,10 @@ progress {
   box-shadow: var(--bs-box-shadow-sm);
   max-width: 100%;
   height: auto;
+    height: 229px;
+    width: 169px;
 }
+
 
 .figure {
   display: inline-block;

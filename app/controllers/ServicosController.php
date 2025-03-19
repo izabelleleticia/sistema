@@ -4,7 +4,11 @@
 class ServicosController extends Controller
 {
     private $servicoModel;
-    public function __construct(){
+    public function __construct()
+    {
+        if (session_status() == PHP_SESSION_NONE) {
+            session_start();
+        }
 
         $this->servicoModel = new Servico();
     }
@@ -14,24 +18,24 @@ class ServicosController extends Controller
         $dados = array();
         $dados['titulo'] = 'Servicos - Site Mestre Motores';
 
-       
+
         $todosServico = $this->servicoModel->getTodosServico();
         $dados['todosServico'] = $todosServico;
         $this->carregarViews('servicos', $dados);
 
     }
-    public function detalheServico  ($id)
+    public function detalheServico($id)
     {
         // var_dump($id);
         $linkServico = $this->gerarLinkServico($id);
-        $dadosServico = $this->servicoModel-getDadosServico($id);
-        
-        if($dadosServico){
+        $dadosServico = $this->servicoModel - getDadosServico($id);
+
+        if ($dadosServico) {
             $dados['titulo'] = $dadosServico['nome_servico'] . ' - Mestre Motores';
             $dados['detalhe'] = $dadosServico;
             $this->carregarViews('detalheServico', $dados);
-            
-        }else{
+
+        } else {
             $dados['titulo'] = ' Serviços - Mestre Motores';
             $this->carregarViews('detalheServico', $dados);
         }
@@ -59,11 +63,12 @@ class ServicosController extends Controller
     //BACK-END DASHBOARD SERVIÇO
 
     //MÉTODO LISTAR TODOS OS SERVIÇOS
-    public function listar(){
+    public function listar()
+    {
 
         $dados = array();
         $dados['conteudo'] = 'admin/servico/listar';
-        
+
 
         $dados['servicos'] = $this->servicoModel->getTodosServico();
         // var_dump($dados['servicos']);
@@ -77,36 +82,91 @@ class ServicosController extends Controller
         //View sempre última
         $this->carregarViews('admin/index', $dados);
     }
-    public function adicionar(){
+    public function adicionar()
+    {
         $dados = array();
-
-        //se carregamento da página está vindo do form
-        if($_SERVER['REQUEST_METHOD'] ==='POST'){
-
-            //Dados dos campos de input - name
+    
+       
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $nome_servico = filter_input(INPUT_POST, 'nome_servico', FILTER_SANITIZE_SPECIAL_CHARS);
             $descricao_servico = filter_input(INPUT_POST, 'descricao_servico', FILTER_SANITIZE_SPECIAL_CHARS);
             $valor_servico = filter_input(INPUT_POST, 'valor_servico', FILTER_SANITIZE_NUMBER_FLOAT);
             $tempo_exec_servico = filter_input(INPUT_POST, 'tempo_exec_servico', FILTER_SANITIZE_SPECIAL_CHARS);
-            $alt_servico = $nome_servico;
+            $alt_tipo = $nome_servico;
             $tipo_servico = filter_input(INPUT_POST, 'tipo_servico', FILTER_SANITIZE_SPECIAL_CHARS);
             $id_especialidade = filter_input(INPUT_POST, 'id_especialidade', FILTER_SANITIZE_NUMBER_INT);
             $status_servico = filter_input(INPUT_POST, 'status_servico', FILTER_SANITIZE_SPECIAL_CHARS);
-            $foto_servico = filter_input(INPUT_POST, 'foto_servico', FILTER_SANITIZE_SPECIAL_CHARS);
-
-            var_dump($nome_servico);
-            var_dump($descricao_servico);
-            var_dump($valor_servico);
-            var_dump($tempo_exec_servico);
-            var_dump($alt_servico);
-            var_dump($tipo_servico);
-            var_dump($id_especialidade);
-            var_dump($status_servico);
-
-            // var_dump('Vim do form');
+    
+           
+            if ($nome_servico && $descricao_servico) {
+    
+                var_dump($_FILES['foto_servico']); 
+    
+              
+                $arquivo = null;
+                if (isset($_FILES['foto_servico']) && $_FILES['foto_servico']['error'] == 0) {
+                    
+                    $arquivo = $this->uploadFoto($_FILES['foto_servico'], $nome_servico);
+                    var_dump($arquivo); 
+                }
+    
+             
+                $dadosServico = array(
+                    'nome_servico' => $nome_servico,
+                    'descricao_servico' => $descricao_servico,
+                    'valor_servico' => $valor_servico,
+                    'tempo_exec_servico' => $tempo_exec_servico,
+                    'alt_tipo' => $alt_tipo,
+                    'tipo_servico' => $tipo_servico,
+                    'id_especialidade' => $id_especialidade,
+                    'status_servico' => $status_servico,
+                    'foto_servico' => $arquivo
+                );
+    
+            
+                $idServico = $this->servicoModel->addServico($dadosServico);
+    
+              
+                if ($idServico) {
+                    $_SESSION['mensagem'] = 'Serviço adicionado com sucesso';
+                    $_SESSION['tipo_msg'] = 'sucesso';
+                    header('Location: http://localhost/sistema/public/servicos/listar');
+                    exit;
+                } else {
+                    $_SESSION['mensagem'] = 'Erro ao adicionar o serviço - Ao enviar para a base de dados';
+                    $_SESSION['tipo_msg'] = 'erro';
+                    header('Location: http://localhost/sistema/public/servicos/adicionar');
+                    exit;
+                }
+            } else {
+             
+                $_SESSION['mensagem'] = 'Erro ao adicionar o serviço - Informe todos os dados';
+                $_SESSION['tipo_msg'] = 'erro';
+                header('Location: http://localhost/sistema/public/servicos/adicionar');
+                exit;
+            }
         }
-        $dados['conteudo'] = 'admin/servico/adicionar';
 
+           // Buscar as especialidades
+           $especialidade = new Especialidade();
+           $dados['especialidade'] = $especialidade->getTodasEspecialidades();
+           var_dump($dados['especialidade']);  
+    
+        $dados['conteudo'] = 'admin/servico/adicionar';
         $this->carregarViews('admin/index', $dados);
+    }
+        public function uploadFoto($file, $nome)
+    {
+
+        $dir = 'public/uploads/servico/';
+        if (!file_exists($dir)) {
+            mkdir($dir, 0755, true);
+        }
+        $ext = pathinfo($file['name'], PATHINFO_EXTENSION);
+        $nome_foto = uniqid() . $nome . '.' . $ext;
+        if (move_uploaded_file($file['tmp_name'], $dir . $nome_foto)) {
+            return 'servico/' . $nome_foto;
+        }
+        return false;
     }
 }
