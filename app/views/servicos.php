@@ -22,7 +22,9 @@
             <button>ver todos os serviços</button>
         </div>
         <div class="conteudoServico list-servico">
-            <?php foreach ($todosServico as $linha): ?>
+            
+        <?php foreach ($dados['servicosRandomicos'] as $linha): ?>
+
                 
                 <div>
                    

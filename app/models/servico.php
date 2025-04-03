@@ -15,7 +15,24 @@ class Servico extends Model
     }
     public function getTodosServico()
     {
-        $sql = "SELECT * FROM tbl_servico where status_servico = 'ATIVO' order by nome_servico";
+        $sql = "SELECT 
+        tbl_servico.id_servico, 
+        tbl_servico.nome_servico, 
+        tbl_servico.descricao_servico, 
+        tbl_servico.valor_servico, 
+        tbl_servico.tempo_exec_servico, 
+        tbl_servico.foto_servico, 
+        tbl_servico.alt_tipo, 
+        tbl_servico.tipo_servico, 
+        tbl_servico.status_servico, 
+        tbl_especialidade.nome_especialidade  
+    FROM tbl_servico  
+    INNER JOIN tbl_especialidade 
+        ON tbl_servico.id_especialidade = tbl_especialidade.id_especialidade 
+    WHERE tbl_servico.status_servico = 'ATIVO' 
+    ORDER BY tbl_servico.nome_servico";
+
+
         $stmt = $this->db->query($sql);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
@@ -29,7 +46,7 @@ class Servico extends Model
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    //Método para Adicionar um Serviço
+
 
     public function addServico($dados)
     {
@@ -46,9 +63,45 @@ class Servico extends Model
         $stmt->bindValue(':tipo_servico', $dados['tipo_servico'], PDO::PARAM_STR);
         $stmt->bindValue(':id_especialidade', $dados['id_especialidade'], PDO::PARAM_INT);
         $stmt->bindValue(':status_servico', $dados['status_servico'], PDO::PARAM_INT);
-      
 
         return $stmt->execute();
-
     }
+
+    public function editarServico($dados) {
+        $sql = "UPDATE tbl_servico SET 
+            nome_servico = :nome,
+            descricao_servico = :descricao,
+            valor_servico = :valor,
+            tempo_exec_servico = :tempo,
+            alt_tipo = :alt,
+            id_especialidade = :especialidade,
+            status_servico = :status";
+    
+        // Se uma nova foto foi enviada, adiciona ao SQL
+        if (!empty($dados['foto_servico'])) {
+            $sql .= ", foto_servico = :foto";
+        }
+    
+       
+    
+        $stmt = $this->db->prepare($sql);
+        
+        $stmt->bindValue(':nome', $dados['nome_servico']);
+        $stmt->bindValue(':descricao', $dados['descricao_servico']);
+        $stmt->bindValue(':valor', $dados['valor_servico']);
+        $stmt->bindValue(':tempo', $dados['tempo_exec_servico']);
+        $stmt->bindValue(':foto', $dados['foto_servico']);
+        $stmt->bindValue(':alt', $dados['alt_tipo']);
+        $stmt->bindValue(':especialidade', $dados['id_especialidade']);
+        $stmt->bindValue(':status', $dados['status_servico']);
+        $stmt->bindValue(':id', $dados['id_servico']);
+    
+        // Só faz bind da foto se ela foi enviada
+        if (!empty($dados['foto_servico'])) {
+            $stmt->bindValue(':foto', $dados['foto_servico']);
+        }
+    
+        return $stmt->execute();
+    }
+    
 }
