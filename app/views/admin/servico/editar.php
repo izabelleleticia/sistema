@@ -1,14 +1,21 @@
-<form class="row g-3" method="POST" enctype="multipart/form-data"
-      action="<?php echo BASE_URL; ?>servicos/editar/<?php echo $dadosServico['id_servico']; ?>">
-
-    <div class="col-md-3 text-center">
-        <img id="preview" src="<?php echo BASE_URL . 'uploads/' . $dadosServico['foto_servico']; ?>" 
-             alt="Imagem do Serviço"
-             style="width: 100%; cursor: pointer;"
-             title="Clique na imagem para selecionar uma foto">
-
-        <input type="file" name="foto_servico" id="foto_servico" style="display: none;" accept="image/*">        
-    </div>
+<form class="row g-3" method="POST" enctype="multipart/form-data" action="<?php echo BASE_URL; ?>servicos/editar/<?php echo $dadosServico['id_servico']; ?>">
+    <input type="hidden" name="id_servico" value="<?php echo $dadosServico['id_servico']; ?>">
+    <div class="col-md-2">
+    <?php
+    // Verifica e monta o caminho completo da foto
+    $fotoPath = !empty($dadosServico['foto_servico']) 
+               ? BASE_URL . 'uploads/' . $dadosServico['foto_servico']
+               : BASE_URL . 'assets/img/sem-foto.jpg';
+    ?>
+    
+    <img id="preview" class="rounded-2" src="<?= htmlspecialchars($fotoPath) ?>" 
+         alt="Foto do serviço" 
+         style="width:100%; height:150px; object-fit:cover; cursor:pointer;"
+         title="Clique para alterar a foto">
+         
+    <input type="file" name="foto_servico" id="foto_servico" style="display:none;" accept="image/*">
+    <input type="hidden" name="foto_atual" value="<?= htmlspecialchars($dadosServico['foto_servico'] ?? '') ?>">
+</div>
 
     <div class="col-md-9">
         <div class="row">

@@ -3,7 +3,7 @@
     enctype="multipart/form-data">
 
 <div class="col-md-2 ">
-        <img id="preview" class="rounded-2" src="https://localhost/sistema/public/uploads/servico/revisao_completa.jpg" alt="" style="width:100%; cursor: pointer;"
+        <img id="preview" class="rounded-2" src="http://localhost/sistema/public/uploads/servico/" alt="" style="width:100%; cursor: pointer;"
             title="Clique na imagem para selecionar uma foto">
             <input type="file" name="foto_servico" id="foto_servico" style="display:none;" accept="image/">
 
@@ -40,15 +40,17 @@
         </select>
     </div>
     <div class="col-md-4">
-        <label for="inputState" class="form-label">Especialidade</label>
-        <select id="inputState" class="form-select" id="id_especialidade" name="id_especialidade" required>
-            <option selected>Insira a Especialidade</option>
-            <?php foreach ($especialidade as $linha): ?>
-            <option value="value="<?php echo $linha['id_especialidade'] ?>><?php echo $linha['nome_especialidade'] ?></option>
-         <?php endforeach; ?>
+    <label for="inputState" class="form-label">Especialidade</label>
+    <select id="inputState" class="form-select" id="id_especialidade" name="id_especialidade" required>
+        <option value="">Insira a Especialidade</option>
+        <?php foreach ($especialidade as $linha): ?>
+            <option value="<?php echo $linha['id_especialidade']; ?>">
+                <?php echo $linha['nome_especialidade']; ?>
+            </option>
+        <?php endforeach; ?>
+    </select>
+</div>
 
-        </select>
-    </div>
    
 
     <div class="col-12">

@@ -184,13 +184,13 @@ class ServicosController extends Controller
         // Se carregamento da página está vindo don FORM
         if($_SERVER['REQUEST_METHOD'] === 'POST'){
             
-          
+                $id_servico = filter_input(INPUT_POST, 'id_servico', FILTER_SANITIZE_SPECIAL_CHARS);
                 $nome_servico = filter_input(INPUT_POST, 'nome_servico', FILTER_SANITIZE_SPECIAL_CHARS);
                 $descricao_servico = filter_input(INPUT_POST, 'descricao_servico', FILTER_SANITIZE_SPECIAL_CHARS);
                 $valor_servico = filter_input(INPUT_POST, 'valor_servico', FILTER_SANITIZE_NUMBER_FLOAT);
                 $tempo_exec_servico = filter_input(INPUT_POST, 'tempo_exec_servico', FILTER_SANITIZE_SPECIAL_CHARS);
                 $alt_tipo = $nome_servico;
-                $tipo_servico = filter_input(INPUT_POST, 'tipo_servico', FILTER_SANITIZE_SPECIAL_CHARS);
+               
                 $id_especialidade = filter_input(INPUT_POST, 'id_especialidade', FILTER_SANITIZE_NUMBER_INT);
                 $status_servico = filter_input(INPUT_POST, 'status_servico', FILTER_SANITIZE_SPECIAL_CHARS);
  
@@ -210,16 +210,18 @@ class ServicosController extends Controller
                
  
                 $dadosServico = array(
+                    'id_servico' => $id_servico,
                     'nome_servico' => $nome_servico,
                     'descricao_servico' => $descricao_servico,
                     'valor_servico' => $valor_servico,
                     'tempo_exec_servico' => $tempo_exec_servico,
                     'alt_tipo' => $alt_tipo,
-                    'tipo_servico' => $tipo_servico,
+
                     'id_especialidade' => $id_especialidade,
                     'status_servico' => $status_servico,
                     'foto_servico' => $arquivo
                 );
+                
  
                 // EDITAR NA BASE DE DADOS
  

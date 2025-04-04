@@ -11,6 +11,8 @@ class HomeController extends Controller{
         //Obter os serviços de forma RAND()
         $servicoModel = new Servico();
         $randServico = $servicoModel->getServicoRand();
+
+        
         // var_dump($randServico);
         $dados ['randServico'] = $randServico;
 

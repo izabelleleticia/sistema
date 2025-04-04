@@ -13,6 +13,9 @@ class Servico extends Model
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+
+    
     public function getTodosServico()
     {
         $sql = "SELECT 
@@ -63,9 +66,11 @@ class Servico extends Model
         $stmt->bindValue(':tipo_servico', $dados['tipo_servico'], PDO::PARAM_STR);
         $stmt->bindValue(':id_especialidade', $dados['id_especialidade'], PDO::PARAM_INT);
         $stmt->bindValue(':status_servico', $dados['status_servico'], PDO::PARAM_INT);
+       
 
         return $stmt->execute();
     }
+    
 
     public function editarServico($dados) {
         $sql = "UPDATE tbl_servico SET 
@@ -82,10 +87,13 @@ class Servico extends Model
             $sql .= ", foto_servico = :foto";
         }
     
-       
+        // Adiciona a cláusula WHERE (obrigatória para UPDATE)
+        $sql .= " WHERE id_servico = :id";
+    
     
         $stmt = $this->db->prepare($sql);
-        
+        var_dump($dados['foto_servico']);
+        $stmt->bindValue(':id', (int)$dados['id_servico'], PDO::PARAM_INT);
         $stmt->bindValue(':nome', $dados['nome_servico']);
         $stmt->bindValue(':descricao', $dados['descricao_servico']);
         $stmt->bindValue(':valor', $dados['valor_servico']);
@@ -94,13 +102,13 @@ class Servico extends Model
         $stmt->bindValue(':alt', $dados['alt_tipo']);
         $stmt->bindValue(':especialidade', $dados['id_especialidade']);
         $stmt->bindValue(':status', $dados['status_servico']);
-        $stmt->bindValue(':id', $dados['id_servico']);
+       
     
         // Só faz bind da foto se ela foi enviada
         if (!empty($dados['foto_servico'])) {
             $stmt->bindValue(':foto', $dados['foto_servico']);
         }
-    
+        
         return $stmt->execute();
     }
     
