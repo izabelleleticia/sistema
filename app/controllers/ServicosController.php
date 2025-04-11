@@ -84,7 +84,7 @@ class ServicosController extends Controller
     public function adicionar()
     {
         $dados = array();
-    
+       
        
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $nome_servico = filter_input(INPUT_POST, 'nome_servico', FILTER_SANITIZE_SPECIAL_CHARS);
@@ -94,7 +94,9 @@ class ServicosController extends Controller
             $alt_tipo = $nome_servico;
             $tipo_servico = filter_input(INPUT_POST, 'tipo_servico', FILTER_SANITIZE_SPECIAL_CHARS);
             $id_especialidade = filter_input(INPUT_POST, 'id_especialidade', FILTER_SANITIZE_NUMBER_INT);
-            $status_servico = filter_input(INPUT_POST, 'status_servico', FILTER_SANITIZE_SPECIAL_CHARS);
+            $status_servico = filter_input(INPUT_POST, 'status_servico', FILTER_SANITIZE_STRING);
+
+
     
            
             if ($nome_servico && $descricao_servico) {
@@ -161,8 +163,8 @@ class ServicosController extends Controller
     
         public function uploadFoto($file, $nome)
     {
-
-        $dir = 'public/uploads/servico/';
+       
+        $dir = 'uploads/servico/';
         if (!file_exists($dir)) {
             mkdir($dir, 0755, true);
         }
@@ -170,6 +172,7 @@ class ServicosController extends Controller
         $nome_foto = uniqid() . $nome . '.' . $ext;
         if (move_uploaded_file($file['tmp_name'], $dir . $nome_foto)) {
             return 'servico/' . $nome_foto;
+            
         }
         return false;
     }
@@ -177,6 +180,7 @@ class ServicosController extends Controller
      // 3 - Método para editar Servico
      public function editar($id = null){
         $dados = array();
+       
  
         $dadosServico = $this->servicoModel->getDadosServico($id);
         
@@ -192,22 +196,17 @@ class ServicosController extends Controller
                 $alt_tipo = $nome_servico;
                
                 $id_especialidade = filter_input(INPUT_POST, 'id_especialidade', FILTER_SANITIZE_NUMBER_INT);
-                $status_servico = filter_input(INPUT_POST, 'status_servico', FILTER_SANITIZE_SPECIAL_CHARS);
+                $status_servico = filter_input(INPUT_POST, 'status_servico', FILTER_SANITIZE_STRING);
  
             if($nome_servico && $descricao_servico){
  
-                if($dadosServico['foto_servico'] == ''){
-                    if(isset($_FILES['foto_servico']) && $_FILES['foto_servico']['error'] == 0){
- 
-                        // Realizar o upload da imagem
-                        $arquivo = $this->uploadFoto($_FILES['foto_servico'], $nome_servico);
-   
-                    }
-                } else {
-                    $arquivo = $dadosServico['foto_servico'];
+                $arquivo = $dadosServico['foto_servico']; // Começa assumindo a atual
+
+                if (isset($_FILES['foto_servico']) && $_FILES['foto_servico']['error'] === 0) {
+                    // Se uma nova imagem foi enviada, faz upload e substitui
+                    $arquivo = $this->uploadFoto($_FILES['foto_servico'], $nome_servico);
                 }
- 
-               
+                
  
                 $dadosServico = array(
                     'id_servico' => $id_servico,
@@ -244,10 +243,7 @@ class ServicosController extends Controller
                 $dados['tipo-msg'] = 'erro';
             }
  
-        }
- 
-       
- 
+        } 
         
         $dados['dadosServico'] = $dadosServico;
  
@@ -265,4 +261,19 @@ class ServicosController extends Controller
  
         $this->carregarViews('admin/index', $dados);
     }
+    // Método no controlador para desativar o serviço
+public function desativar($id)
+{
+    // Chama o método do modelo para desativar o serviço
+    $resultado = $this->servicoModel->desativarServico($id);
+
+    if ($resultado) {
+        // Retorna uma resposta de sucesso
+        echo json_encode(['status' => 'sucesso', 'mensagem' => 'Serviço desativado com sucesso']);
+    } else {
+        // Retorna uma resposta de erro
+        echo json_encode(['status' => 'erro', 'mensagem' => 'Erro ao desativar o serviço']);
+    }
+}
+
 }

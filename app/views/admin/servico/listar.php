@@ -37,7 +37,7 @@
         <th scope="col">Tipo</th>
         <th scope="col">Especialidade</th>
         <th>Editar</th>
-        <th>Desativar</th>
+        <th>Desativar</th> 
     </tr>
   </thead>
   <tbody>
@@ -108,7 +108,7 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <h2>Deseja realmente desativar o serviço</h2>
+        <h2>Deseja realmente desativar o serviço?</h2>
         <input type="hidden" id="idParaDesativar" value="">
       </div>
       <div class="modal-footer">
@@ -119,59 +119,52 @@
   </div>
 </div>
  
- 
- 
-<script>
-  document.addEventListener('DOMContentLoaded', function(){
- 
-    function abrirModal(id_servico){
- 
-      if($('#desativarModal').hasClass('show')){
-        return;
-      }
- 
-      document.getElementById('idParaDesativar').value = id_servico;
- 
-      $('#desativarModal').modal('show');
-      //alert("Cheguei aqui");
-     
+ <script>document.addEventListener('DOMContentLoaded', function(){
+
+function abrirModal(id_servico) {
+  // Verifica se o modal já está aberto
+  const modalElement = document.getElementById('desativarModal');
+  const modal = new bootstrap.Modal(modalElement);
+
+  // Se o modal não estiver visível, o abre
+  if (!modalElement.classList.contains('show')) {
+    document.getElementById('idParaDesativar').value = id_servico;
+    modal.show();
+  }
+}
+
+document.getElementById('btnDesativar').addEventListener('click', function(){
+  const idServico = document.getElementById('idParaDesativar').value;
+  if(idServico){
+    console.log("Id recuperado: " + idServico);
+    desativarServico(idServico);
+  }
+});
+
+function desativarServico(idServico){
+  fetch(`http://localhost/sistema/public/servicos/desativar/${idServico}`,{
+    method: 'POST',
+    headers:{
+      'Content-Type': 'application/json'
     }
- 
-    document.getElementById('btnDesativar').addEventListener('click', function(){
- 
-      const idServico = document.getElementById('idParaDesativar').value;
-      if(idServico){
-        console.log("Id recuperado: " + idServico)
-        desativarServico(idServico);
-      }
- 
-    })
- 
-    function desativarServico(idServico){
-      fetch(`http://localhost/sistema/public/servicos/desativar/${idServico}`,{
-        method: 'POST',
-        headers:{
-          'Content-Type': 'application/json'
-        }
-      })
-      .then(response => {
-        if(!response.ok){
-          throw new Error(`Erro HTTP: ${response.status}`)
-        }
-        return response.json();
-      })
-      .then(data =>{
-        // Resposta com sucesso
-        $('#desativarModal').modal('hide');
-        location.reload();
-      })
-      .catch(error => {
-        alert("Erro na requisição. Verifique a conexão com o servidor");
-      })
- 
-    }
- 
- 
-    window.abrirModal = abrirModal;
   })
+  .then(response => {
+    if(!response.ok){
+      throw new Error(`Erro HTTP: ${response.status}`);
+    }
+    return response.json();
+  })
+  .then(data => {
+    // Resposta com sucesso
+    const modal = bootstrap.Modal.getInstance(document.getElementById('desativarModal'));
+    modal.hide();
+    location.reload();
+  })
+  .catch(error => {
+    alert("Erro na requisição. Verifique a conexão com o servidor");
+  })
+}
+
+window.abrirModal = abrirModal;
+});
 </script>

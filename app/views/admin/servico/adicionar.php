@@ -57,10 +57,12 @@
         <button type="submit" class="btn btn-primary">Cadastrar</button>
         <button type="submit" class="btn btn-secondary">Cancelar</button>
 
+
     </div>
 
 </form>
 <script>
+    
     document.addEventListener('DOMContentLoaded', function () {
 
         const visualizarImg = document.getElementById('preview');

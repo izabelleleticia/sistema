@@ -33,7 +33,7 @@ class Servico extends Model
     INNER JOIN tbl_especialidade 
         ON tbl_servico.id_especialidade = tbl_especialidade.id_especialidade 
     WHERE tbl_servico.status_servico = 'ATIVO' 
-    ORDER BY tbl_servico.nome_servico";
+    ORDER BY tbl_servico.nome_servico LIMIT 10";
 
 
         $stmt = $this->db->query($sql);
@@ -66,7 +66,8 @@ class Servico extends Model
         $stmt->bindValue(':tipo_servico', $dados['tipo_servico'], PDO::PARAM_STR);
         $stmt->bindValue(':id_especialidade', $dados['id_especialidade'], PDO::PARAM_INT);
         $stmt->bindValue(':status_servico', $dados['status_servico'], PDO::PARAM_INT);
-       
+        var_dump($dados['status_servico']);
+
 
         return $stmt->execute();
     }
@@ -74,42 +75,55 @@ class Servico extends Model
 
     public function editarServico($dados) {
         $sql = "UPDATE tbl_servico SET 
-            nome_servico = :nome,
-            descricao_servico = :descricao,
-            valor_servico = :valor,
-            tempo_exec_servico = :tempo,
-            alt_tipo = :alt,
-            id_especialidade = :especialidade,
-            status_servico = :status";
+                nome_servico = :nome,
+                descricao_servico = :descricao,
+                valor_servico = :valor,
+                tempo_exec_servico = :tempo,
+                alt_tipo = :alt,
+                id_especialidade = :especialidade,
+                status_servico = :status";
     
-        // Se uma nova foto foi enviada, adiciona ao SQL
+        // Verifica se a foto foi enviada para ser atualizada
         if (!empty($dados['foto_servico'])) {
-            $sql .= ", foto_servico = :foto";
+            $sql .= ", foto_servico = :foto_servico";  // Adiciona a coluna foto_servico no SQL
         }
-    
-        // Adiciona a cláusula WHERE (obrigatória para UPDATE)
+        
+        // Adiciona a cláusula WHERE
         $sql .= " WHERE id_servico = :id";
     
-    
+        // Prepara a consulta
         $stmt = $this->db->prepare($sql);
-        var_dump($dados['foto_servico']);
+    
+        // Faz o binding dos parâmetros
         $stmt->bindValue(':id', (int)$dados['id_servico'], PDO::PARAM_INT);
         $stmt->bindValue(':nome', $dados['nome_servico']);
         $stmt->bindValue(':descricao', $dados['descricao_servico']);
         $stmt->bindValue(':valor', $dados['valor_servico']);
         $stmt->bindValue(':tempo', $dados['tempo_exec_servico']);
-        $stmt->bindValue(':foto', $dados['foto_servico']);
         $stmt->bindValue(':alt', $dados['alt_tipo']);
         $stmt->bindValue(':especialidade', $dados['id_especialidade']);
         $stmt->bindValue(':status', $dados['status_servico']);
-       
     
-        // Só faz bind da foto se ela foi enviada
+        // Se a foto não estiver vazia, faz o binding do valor
         if (!empty($dados['foto_servico'])) {
-            $stmt->bindValue(':foto', $dados['foto_servico']);
+            $stmt->bindValue(':foto_servico', $dados['foto_servico']);
         }
-        
+    
+        // Executa a consulta e retorna o resultado
         return $stmt->execute();
     }
+    
+    
+    
+public function desativarServico($id)
+{
+   
+    $sql = "UPDATE tbl_servico SET status_servico = 'DESATIVADO' WHERE id_servico = :id";
+    $stmt = $this->db->prepare($sql);
+    $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+
+    return $stmt->execute();
+}
+
     
 }
