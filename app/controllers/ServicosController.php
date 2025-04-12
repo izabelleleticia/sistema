@@ -94,7 +94,7 @@ class ServicosController extends Controller
             $alt_tipo = $nome_servico;
             $tipo_servico = filter_input(INPUT_POST, 'tipo_servico', FILTER_SANITIZE_SPECIAL_CHARS);
             $id_especialidade = filter_input(INPUT_POST, 'id_especialidade', FILTER_SANITIZE_NUMBER_INT);
-            $status_servico = filter_input(INPUT_POST, 'status_servico', FILTER_SANITIZE_STRING);
+            $status_servico = filter_input(INPUT_POST, 'status_servico', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 
 
     
@@ -145,6 +145,8 @@ class ServicosController extends Controller
                 $_SESSION['tipo_msg'] = 'erro';
                 header('Location: http://localhost/sistema/public/servicos/adicionar');
                 exit;
+                var_dump($_POST['status_servico']);
+
             }
         }
 

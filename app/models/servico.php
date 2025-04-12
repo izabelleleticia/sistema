@@ -65,7 +65,8 @@ class Servico extends Model
         $stmt->bindValue(':alt_tipo', $dados['alt_tipo'], PDO::PARAM_STR);
         $stmt->bindValue(':tipo_servico', $dados['tipo_servico'], PDO::PARAM_STR);
         $stmt->bindValue(':id_especialidade', $dados['id_especialidade'], PDO::PARAM_INT);
-        $stmt->bindValue(':status_servico', $dados['status_servico'], PDO::PARAM_INT);
+        $stmt->bindValue(':status_servico', $dados['status_servico'], PDO::PARAM_STR);
+
         var_dump($dados['status_servico']);
 
 

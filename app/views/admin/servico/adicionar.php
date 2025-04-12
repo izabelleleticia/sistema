@@ -34,9 +34,9 @@
         <label for="inputState" class="form-label">Status</label>
         <select id="inputState" class="form-select" id="status_servico" name="status_servico" required>
             <option selected>Insira o status</option>
-            <option value="1">ATIVO</option>
-            <option value="2">INATIVO</option>
-            <option value="3">DESATIVADO</option>
+            <option value="ATIVO">ATIVO</option>
+            <option value="INATIVO">INATIVO</option>
+            <option value="DESATIVADO">DESATIVADO</option>
         </select>
     </div>
     <div class="col-md-4">
